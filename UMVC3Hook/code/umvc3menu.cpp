@@ -91,7 +91,7 @@ void UMVC3Menu::Draw()
 
 void UMVC3Menu::UpdateControls()
 {
-	if (GetAsyncKeyState(VK_F1))
+	if (GetAsyncKeyState(VK_TAB))
 	{
 		if (GetTickCount64() - timer <= 150) return;
 		timer = GetTickCount64();

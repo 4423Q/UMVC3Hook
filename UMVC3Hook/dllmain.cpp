@@ -83,7 +83,7 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 	if (first_msg)
 	{
 		Notifications->SetNotificationTime(5500);
-		Notifications->PushNotification("UMVC3Hook %s is running! Press F1 to open the menu.", UMVC3HOOK_VERSION);
+		Notifications->PushNotification("UMVC3Hook %s is running! Press TAB to open the menu.", UMVC3HOOK_VERSION);
 		first_msg = false;
 	}
 	Notifications->Draw();
@@ -146,7 +146,9 @@ void OnInitializeHook()
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 	InjectHook(_addr(0x14001B451), tramp->Jump(&UMVC3Camera::HookedSetRotation), PATCH_CALL);
 	InjectHook(_addr(0x14001B471), tramp->Jump(&UMVC3Camera::HookedSetPosition), PATCH_CALL);
-	
+
+	InjectHook(_addr(0x140289c5a), tramp->Jump(HookInput), PATCH_CALL);
+
 	InjectHook(_addr(0x14001A490), tramp->Jump(UMVC3Hooks::HookCamera), PATCH_JUMP);
 
 }

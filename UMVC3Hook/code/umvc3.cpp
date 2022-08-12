@@ -69,6 +69,13 @@ int64 UMVC3Hooks::HookCamera(int64 camera, int64 a2)
 	return a2;
 }
 
+void HookInput(int64 input)
+{
+	printf("INput: %p", input);
+	((void(__fastcall*)(int64))_addr(0x1402b41b0))(input);
+	return;
+}
+
 void SetCamFOV(float value)
 {
 	if (camera_ptr)

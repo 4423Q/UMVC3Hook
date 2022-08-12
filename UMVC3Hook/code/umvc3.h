@@ -30,7 +30,6 @@ struct input_info {
 };
 
 
-
 void SetCamFOV(float value);
 float GetCamFOV();
 
@@ -39,4 +38,4 @@ namespace UMVC3Hooks {
 	int64 HookCamera(int64 camera, int64 a2);
 }
 
-void HookInput(int64 input);
+void HookInput(input_info * input);

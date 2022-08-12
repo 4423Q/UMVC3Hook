@@ -5,6 +5,9 @@
 #include "eSettingsManager.h"
 #include <Windows.h>
 int64 camera_ptr = 0;
+int buffer_length = 60;
+int buffer_index = 0;
+char input_buffer[3032][60] = { {0} };
 
 void UMVC3Hooks::HookProcessStuff()
 {
@@ -69,10 +72,38 @@ int64 UMVC3Hooks::HookCamera(int64 camera, int64 a2)
 	return a2;
 }
 
-void HookInput(int64 input)
+void HookInput(input_info * input)
 {
-	printf("INput: %p", input);
-	((void(__fastcall*)(int64))_addr(0x1402b41b0))(input);
+	int size = 3032;
+	char * startinput = (char *)malloc(size);
+	char * target = &input_buffer[0][buffer_index * size];
+
+	if (*target == '\0') {
+		printf("Saving initial input: from %p to %p\n", input, startinput);
+		memcpy(startinput, input, size);
+	}
+	else {
+		printf("Loading input from buffer: %i from %p to %p\n", buffer_index, target, input);
+		memcpy(startinput, target, size);
+	}
+
+	
+	((void(__fastcall*)(input_info*))_addr(0x1402b41b0))(input);
+	
+	printf("Saving new input to slot %i from %p to %p\n", buffer_index, input, target);
+	memcpy(target, input, size);
+	
+
+	printf("Replacing input: %i from %p to %p\n", size, startinput, input);
+	memcpy(input, startinput, size);
+	free(startinput);
+
+
+	buffer_index += 1;
+	if (buffer_index >= buffer_length) {
+		buffer_index = 0;
+	}
+	
 	return;
 }
 
